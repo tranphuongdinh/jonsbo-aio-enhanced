@@ -1,0 +1,11 @@
+/work/
+/Data/
+/Assets/ThemeThumbs/
+/Tools/
+*.exe
+*.exe.config
+*.pdb
+*.dll
+*.tmp
+*.part
+!/Runtime/*.dll
