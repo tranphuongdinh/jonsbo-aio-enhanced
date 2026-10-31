@@ -10,6 +10,8 @@ The app uses the official JONSBO AIO icon, wordmark and backdrop from the instal
 
 Extract the complete standalone ZIP, then double-click `JonsboStudio.exe`. First launch automatically checks Microsoft WebView2 and the connected DS339 USB driver, showing a setup progress window only when installation is needed. WebView2 setup needs internet access; DS339 driver installation requests Windows administrator approval. If a newly connected DS339 needs its driver, reopen Studio. Current Windows 10/11 x64 with .NET Framework 4.8 is required.
 
+On first launch, each connected display receives compatible default output settings. Choose a theme for each display from Online themes or import a complete local package; personal profiles and media are not included in the release. The app shows guidance when a theme is missing and reports playback errors visibly.
+
 JONSBO AIO does not need to be installed. Video preparation uses `Native/FFmpeg`; DS339 playback uses `Native/DS339` and the separately installed USB driver in `Drivers/DS339`. Launch `JonsboStudio.exe` directly. Keep all bundled folders together. Existing JONSBO themes are discovered only when that optional installation is present; otherwise import themes or download them from Online themes.
 
 Exit the official JONSBO-AIO application before connecting, because the serial port requires exclusive access. Select a theme and choose Apply. Auto rotation includes the correction verified on the connected VMAXB panel. Manual rotation is also available.

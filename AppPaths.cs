@@ -9,6 +9,7 @@ namespace JonsboStudio {
  }
  sealed class StudioSettings {
   public string ThemePath="",Port="";public int Width=1920,Height=462,Fps=60,Quality=80,CacheMB=128,Rotation=-1;public bool Resume=true,WasPlaying=false;
+  public static StudioSettings ForDevice(string port){bool ds339=port==MsDisplayTransport.PortId;return new StudioSettings{Port=port,Width=ds339?960:1920,Height=ds339?376:462,Fps=60,Quality=75,CacheMB=128,Rotation=-1,Resume=true};}
   public static string FilePath{get{return Path.Combine(AppPaths.Data("Settings"),"session.json");}}
   public static StudioSettings Load(){try{return Newtonsoft.Json.JsonConvert.DeserializeObject<StudioSettings>(File.ReadAllText(FilePath))??new StudioSettings();}catch{return new StudioSettings();}}
   public void Save(){AppPaths.SaveJson(FilePath,JObject.FromObject(this));}
