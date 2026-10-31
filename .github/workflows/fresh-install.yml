@@ -12,7 +12,9 @@ on:
         required: true
         type: string
 permissions:
-  contents: read
+  # GitHub requires write-level access to read unpublished draft-release assets.
+  # This manually dispatched workflow only downloads/tests; it never publishes.
+  contents: write
 jobs:
   fresh-windows:
     runs-on: windows-2022
