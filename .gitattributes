@@ -1,0 +1,2 @@
+# Signed driver package hashes require byte-for-byte preservation.
+Drivers/** -text
