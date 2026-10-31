@@ -34,7 +34,7 @@ namespace JonsboStudio {
    if(File.Exists(oldPath))original=ThemeDocument.Load(oldPath);else original=new ThemeDocument{Path="",Folder=AppPaths.Root,Json=json,Background=""};
    original.Json=json;string library=AppPaths.Data("Themes"),folder=File.Exists(oldPath)&&Path.GetFullPath(oldPath).StartsWith(library+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase)?Path.GetDirectoryName(oldPath):Path.Combine(library,Guid.NewGuid().ToString("N"));Directory.CreateDirectory(folder);string fontRoot=Path.Combine(original.Folder,"font");if(Directory.Exists(fontRoot)&&!string.Equals(original.Folder,folder,StringComparison.OrdinalIgnoreCase))CopyFolder(fontRoot,Path.Combine(folder,"font"));
    foreach(string field in new[]{"filePath","backgroundUrl","backgroundIsVideo","warning","fontAssets"})json.Remove(field);
-   json["Width"]=Math.Max(16,Math.Min(3840,(int?)json["Width"]??1920));json["Height"]=Math.Max(16,Math.Min(2400,(int?)json["Height"]??462));
+   json["Width"]=Math.Max(16,Math.Min(3840,(int?)json["Width"]??1920));json["Height"]=Math.Max(16,Math.Min(2400,(int?)json["Height"]??462));json["BackgroundRotation"]=Math.Max(0,Math.Min(360,(int?)json["BackgroundRotation"]??0));
    NormalizePaths(json,original,folder,false);string name=(string)json["Name"]??"Untitled";string filename=new string(name.Select(c=>Path.GetInvalidFileNameChars().Contains(c)?'_':c).ToArray());if(filename.Length==0)filename="Untitled";string target=Path.Combine(folder,filename+".json");AppPaths.SaveJson(target,json);return target;
   }
   public static void Export(string path,string target){
