@@ -1,6 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$Zip,[switch]$RequireCleanMachine,[string]$ReportDirectory='')
 $ErrorActionPreference = 'Stop'
 $zipPath = (Resolve-Path -LiteralPath $Zip).Path
+$sourceCommit = if ($env:GITHUB_SHA) { $env:GITHUB_SHA } else { (& git -C $PSScriptRoot rev-parse HEAD).Trim() }
 if ($RequireCleanMachine) {
     if ($env:OS -ne 'Windows_NT') { throw 'A clean Windows machine is required.' }
     if (Get-ScheduledTask -TaskName 'JONSBO Studio' -ErrorAction SilentlyContinue) { throw 'This machine already has the Studio startup task.' }
@@ -56,7 +57,7 @@ try {
         if ($ReportDirectory) {
             New-Item -ItemType Directory -Path $ReportDirectory -Force | Out-Null
             Copy-Item (Join-Path $testRoot 'clean-*.png') $ReportDirectory
-            @{passed=$true;cleanMachineRequired=[bool]$RequireCleanMachine;sha256=(Get-FileHash $zipPath).Hash;os=(Get-CimInstance Win32_OperatingSystem).Caption;machine=$env:COMPUTERNAME;testRoot=$testRoot;sourceCommit=(& git -C $PSScriptRoot rev-parse HEAD)} | ConvertTo-Json | Set-Content (Join-Path $ReportDirectory 'result.json')
+            @{passed=$true;cleanMachineRequired=[bool]$RequireCleanMachine;sha256=(Get-FileHash $zipPath).Hash;os=(Get-CimInstance Win32_OperatingSystem).Caption;machine=$env:COMPUTERNAME;testRoot=$testRoot;sourceCommit=$sourceCommit} | ConvertTo-Json | Set-Content (Join-Path $ReportDirectory 'result.json')
         }
         Write-Host "PASS: extracted package, no Data/config, unavailable vendor folder, restricted PATH, unrelated working directory, absent Windows startup task, missing-runtime recovery and bundled 60 FPS video. Test folder: $testRoot"
     } finally { Pop-Location }
