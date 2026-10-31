@@ -8,9 +8,9 @@ The app uses the official JONSBO AIO icon, wordmark and backdrop from the instal
 
 “Start with Windows” registers an immediate user sign-in task with above-normal process priority and starts Studio in the tray. It replaces the older Run registry entry. Windows controls the exact order of startup applications, so being first is not guaranteed.
 
-Open `JonsboStudio.exe` from this folder. Keep its DLLs and Assets folder together; the `Runtime` folder is used when rebuilding from source. Windows x64, .NET Framework 4.8 and Microsoft Edge WebView2 Runtime are required. Video preparation currently uses FFmpeg from the installed JONSBO-AIO installation (or a locally supplied executable). DS339 playback uses the MacroSilicon display driver and SDK DLL from that installed application. This is not yet a standalone installer.
+Extract the complete standalone ZIP, then run `Setup.cmd` on a new Windows 10/11 x64 PC. Setup installs Microsoft's WebView2 Runtime if missing and installs the signed DS339 USB driver when a connected DS339 needs it. Driver installation requests Windows administrator approval. Run Setup again if you connect a DS339 later. .NET Framework 4.8 is required (included on current Windows 10/11).
 
-For a release ZIP, extract all files to one folder before launching `JonsboStudio.exe`. The ZIP includes the runtime DLLs and UI assets but does not bundle FFmpeg, the JONSBO-AIO SDK, vendor theme media, or personal settings.
+JONSBO AIO does not need to be installed. Video preparation uses `Native/FFmpeg`; DS339 playback uses `Native/DS339` and the separately installed USB driver in `Drivers/DS339`. After setup, launch `JonsboStudio.exe` directly. Keep all bundled folders together. Existing JONSBO themes are discovered only when that optional installation is present; otherwise import themes or download them from Online themes.
 
 Exit the official JONSBO-AIO application before connecting, because the serial port requires exclusive access. Select a theme and choose Apply. Auto rotation includes the correction verified on the connected VMAXB panel. Manual rotation is also available.
 

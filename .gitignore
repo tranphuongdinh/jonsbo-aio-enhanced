@@ -9,3 +9,8 @@
 *.tmp
 *.part
 !/Runtime/*.dll
+
+/Native/FFmpeg/
+!/Native/DS339/*.dll
+!/Drivers/DS339/amd64/*.dll
+!/Drivers/DS339/x86/*.dll
