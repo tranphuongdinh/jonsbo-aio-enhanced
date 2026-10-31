@@ -4,7 +4,8 @@ $zipPath = (Resolve-Path -LiteralPath $Zip).Path
 if ($RequireCleanMachine) {
     if ($env:OS -ne 'Windows_NT') { throw 'A clean Windows machine is required.' }
     if (Get-ScheduledTask -TaskName 'JONSBO Studio' -ErrorAction SilentlyContinue) { throw 'This machine already has the Studio startup task.' }
-    $legacy = Get-ItemPropertyValue 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name JonsboStudio -ErrorAction SilentlyContinue
+    $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Run')
+    try { $legacy = if ($key) { $key.GetValue('JonsboStudio') } else { $null } } finally { if ($key) { $key.Dispose() } }
     if ($null -ne $legacy) { throw 'This machine already has the Studio Run entry.' }
     if (Test-Path (Join-Path $env:LOCALAPPDATA 'JONSBO-AIO')) { throw 'The vendor app is already present.' }
     Write-Host 'CLEAN MACHINE: no vendor installation, startup task or legacy startup entry.'

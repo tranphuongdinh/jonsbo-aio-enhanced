@@ -45,12 +45,19 @@ jobs:
           Start-Transcript (Join-Path $report 'tests.log')
           try { ./Test-PortableRelease.ps1 -Zip (Join-Path $env:RUNNER_TEMP 'candidate.zip') -RequireCleanMachine -ReportDirectory $report }
           finally { Stop-Transcript }
+      - name: Collect startup diagnostics
+        if: always()
+        shell: pwsh
+        run: |
+          $report = Join-Path $env:RUNNER_TEMP 'fresh-install-results'
+          New-Item -ItemType Directory -Path $report -Force | Out-Null
+          $log = Join-Path $env:LOCALAPPDATA 'JonsboStudio\Logs\startup.log'
+          if (Test-Path $log) { Copy-Item $log (Join-Path $report 'startup.log') }
+          Get-ComputerInfo -Property WindowsProductName,WindowsVersion,OsName,OsArchitecture | ConvertTo-Json | Set-Content (Join-Path $report 'environment.json')
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: fresh-windows-install-evidence
-          path: |
-            ${{ runner.temp }}/fresh-install-results/
-            ~/AppData/Local/JonsboStudio/Logs/startup.log
+          path: ${{ runner.temp }}/fresh-install-results/
           if-no-files-found: warn
