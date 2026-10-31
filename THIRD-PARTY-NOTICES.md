@@ -2,7 +2,7 @@
 
 JONSBO Studio is an independent compatibility application, not an official JONSBO product. JONSBO names and public theme content belong to their respective owners.
 
-The app icon, wordmark and backdrop in `Assets/Icon` and `Assets/Brand` are adapted from the installed JONSBO-AIO software's `Resource/qsb` assets (`qsbLogo.ico`, `qsbLogo.png`, `LeftTopLogo.png` and its background TIFF). These visual assets and JONSBO trademarks remain JONSBO's property; their inclusion does not imply endorsement or a trademark license.
+The app icon, wordmark and backdrop in `Assets/Icon` and `Assets/Brand` are adapted from the installed JONSBO-AIO software's `Resource/qsb` assets (`qsbLogo.png`, `LeftTopLogo.png` and its background TIFF). The `.ico` is built at Windows icon sizes from that official PNG. These visual assets and JONSBO trademarks remain JONSBO's property; their inclusion does not imply endorsement or a trademark license.
 
 Runtime dependencies and their notices:
 
