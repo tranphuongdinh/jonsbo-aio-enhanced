@@ -4,7 +4,9 @@ A dark desktop controller and theme editor for compatible JONSBO USB displays. T
 
 ## Run
 
-Open `JonsboStudio.exe` from this folder. Keep its DLLs, Assets and Runtime folders together. Windows x64, .NET Framework 4.8 and Microsoft Edge WebView2 Runtime are required. Video preparation currently uses FFmpeg from the installed JONSBO-AIO installation (or a locally supplied executable). DS339 playback uses the MacroSilicon display driver and SDK DLL from that installed application. This is not yet a standalone installer.
+Open `JonsboStudio.exe` from this folder. Keep its DLLs and Assets folder together; the `Runtime` folder is used when rebuilding from source. Windows x64, .NET Framework 4.8 and Microsoft Edge WebView2 Runtime are required. Video preparation currently uses FFmpeg from the installed JONSBO-AIO installation (or a locally supplied executable). DS339 playback uses the MacroSilicon display driver and SDK DLL from that installed application. This is not yet a standalone installer.
+
+For a release ZIP, extract all files to one folder before launching `JonsboStudio.exe`. The ZIP includes the runtime DLLs and UI assets but does not bundle FFmpeg, the JONSBO-AIO SDK, vendor theme media, or personal settings.
 
 Exit the official JONSBO-AIO application before connecting, because the serial port requires exclusive access. Select a theme and choose Apply. Auto rotation includes the correction verified on the connected VMAXB panel. Manual rotation is also available.
 
