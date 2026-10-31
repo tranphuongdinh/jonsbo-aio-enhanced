@@ -17,7 +17,7 @@ Ordinary offline decompilation encountered protected method bodies. Read-only in
 | Theme round trips | Native packages are password-protected ZIPs containing JSON/media and sometimes Setting.txt/fonts | Portable import/export, unknown-field preservation, bounded extraction |
 | Stock loop and replacement benchmarks | Sleeping after work adds rendering/transfer time to the frame interval | Fixed deadlines, prepared frames, independent compositor/sender/preview |
 
-The archive password is a format compatibility constant, not an account credential. Native Type 1 layout parsing handles text and basic rectangles; advanced vendor widgets remain an explicit limitation. Basic rectangles export as transparent native PNG layers, with grouping by z position.
+The archive password is a format compatibility constant, not an account credential. Native Type 1 layout parsing handles text, source PNG layers and basic rectangles. Bundled theme fonts are loaded for editor and output rendering. Static layers below live sensor text are baked into the prepared video cache, preserving their order while keeping frame composition fast. Other advanced vendor widgets remain an explicit limitation. Basic rectangles export as transparent native PNG layers, with grouping by z position.
 
 ## Pipeline
 

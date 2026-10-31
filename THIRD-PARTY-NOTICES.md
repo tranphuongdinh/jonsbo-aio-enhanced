@@ -10,7 +10,7 @@ Runtime dependencies and their notices:
 - Microsoft WebView2 SDK: Microsoft license and third-party notices; `Licenses/WebView2-LICENSE.txt` and `Licenses/WebView2-NOTICE.txt`.
 - Inter font: SIL Open Font License 1.1; `Licenses/Inter-OFL.txt` and `Assets/Fonts/OFL.txt`.
 - LibreHardwareMonitorLib 0.9.6: MPL 2.0; `Licenses/LibreHardwareMonitor-MPL-2.0.txt`. Source: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor.
-- Microsoft System.Memory and System.Runtime.CompilerServices.Unsafe runtime libraries: MIT; source packages are available on NuGet. These support the hardware sensor library.
+- Microsoft System.Memory, System.Numerics.Vectors and System.Runtime.CompilerServices.Unsafe runtime libraries: MIT; source packages are available on NuGet. These support the hardware sensor library.
 
 Microsoft Edge WebView2 Runtime and .NET Framework are separately installed Microsoft components. FFmpeg is used as an external executable from the user's existing installation or locally supplied copy; its license obligations depend on that executable's build. No FFmpeg executable is included as a newly built Studio component.
 
