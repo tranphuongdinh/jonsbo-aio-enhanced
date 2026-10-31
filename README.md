@@ -26,18 +26,9 @@ Closing the window keeps playback running in the tray. Exit from the tray stops 
 
 ## Performance
 
-Measured on the user's machine, across short samples; CPU is normalized across all 20 logical processors.
+Measured on the user's 20-logical-processor machine with the DS916 native 916H06 theme at 1920 × 462 and 60 FPS: the cached, single-display diagnostic used 2.14% CPU while submitting 59.99 USB frames and 59.99 fresh frames per second. With the window open and its live preview at 59.6 FPS, Studio used 4.20% CPU. With both DS916 and DS339 playing from cache and the window hidden, Studio used 4.27% CPU. These are short samples and other PC load can change the results; the requested below-2% dual-display target has not been reached.
 
-| Measurement | Installed app | JONSBO Studio |
-| --- | ---: | ---: |
-| Total CPU, visible app | 6.87% | 2.13% including WebView processes |
-| Private memory | 776.3 MB | 411.9 MB including WebView processes |
-| USB frame submissions | Not instrumented | About 59.7–60.0 FPS |
-| App preview | Not instrumented | About 58–60 FPS |
-
-The minimal playback host alone used about 0.06% CPU for cached video and 0.86% for the tested sensor theme. These are different workloads from the visible UI comparison. Aggregate working sets can count shared pages multiple times, so private memory is the more useful comparison here.
-
-Video is prepared once at source frame rate into a persistent JPEG cache. The renderer reuses prepared native-orientation frames, limits RAM, spills to disk and paces output against fixed deadlines. Live overlays compose on a separate worker. Preview resolution is reduced and preview work stops when hidden. A 60 FPS output target repeats frames for lower-frame-rate sources; it does not invent motion through interpolation. USB submissions measure host delivery, not an optical measurement of panel refresh.
+Video is prepared once at source frame rate into a persistent JPEG cache. FFmpeg uses CPU during that first conversion, then exits. The 227-second DS916 clip produced a 1.16 GB cache, and a later hidden-app measurement found no FFmpeg process. Cache files are limited to 8 GB each, with an 8 GB total prune target at startup. The renderer reuses prepared native-orientation frames, limits RAM, spills to disk and paces output against fixed deadlines. Live sensor overlays still require decoding and encoding each displayed frame. Preview JPEG decoding is scaled down before rendering, and preview work stops when the window is hidden. A 60 FPS output target repeats frames for lower-frame-rate sources; it does not invent motion through interpolation. USB submissions measure host delivery, not an optical measurement of panel refresh.
 
 ## Build and verify
 
