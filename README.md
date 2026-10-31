@@ -28,7 +28,7 @@ Closing the window keeps playback running in the tray. Exit from the tray stops 
 - Native `.vmax`, `.JONSBO`, ZIP and JSON theme import; native encrypted ZIP export. Unknown native fields and source assets are retained where possible.
 - Local library with thumbnails, search, edit, apply and recoverable removal. Installed themes are read-only; editor changes are saved as private copies.
 - Editor with background media, text and image layers, position/size/font/color controls, live bindings, duplicate/remove, undo/redo and keyboard nudging. Native `Setting.txt` PNG layers and bundled fonts are rendered for compatible Type 1 themes. Ctrl+S saves.
-- Online catalog with 29 verified public built-in packages, thumbnails, download and apply. The official community store is linked for items requiring its own account or download flow: https://theme.screen-aio.com/theme/
+- Online catalog with 29 public built-in packages and bundled full-artwork previews. Public packages download and apply directly. Community Download & apply opens the official store inside Studio: sign in there, approve any store-required points, then the completed ZIP/VMAX/JONSBO download is imported and applied to the selected display automatically. The store Import button uses the same authenticated download route; vendor software is not launched.
 - Live CPU load, package temperature, P-core clock and package power bindings; memory, time and GPU readings. Bound text has a unit dropdown with Celsius/Fahrenheit, percent, MHz/GHz, watts and GB as appropriate. Fahrenheit and GHz values are converted, and the editor shows the current sensor reading.
 - A matching icon is embedded in the executable, window and system tray. Regenerate its PNG and multi-resolution ICO with `Assets/Icon/Generate-Icon.ps1`.
 
@@ -58,6 +58,6 @@ Diagnostics also support `--list-devices`, `--query-device COM12`, `--benchmark 
 
 Settings, imported themes, downloads, prepared cache and recoverable removals live under `Data`. Back up that folder before moving or deleting this installation. Public theme packages remain their creators' work.
 
-Advanced vendor animation widgets are preserved in native packages but are not fully rendered or editable. CPU hardware readings use LibreHardwareMonitor when available; unsupported sensors display a dash. Community items requiring authentication or points are opened through the official store rather than downloaded automatically. COM5 and COM10 belong to Jungle Leopard Display, so they are excluded. Compatibility with every JONSBO firmware, native widget and package variant is not claimed.
+Advanced vendor animation widgets are preserved in native packages but are not fully rendered or editable. CPU hardware readings use LibreHardwareMonitor when available; unsupported sensors display a dash. Community sign-in and points confirmation remain on the official store; Studio captures completed theme downloads and applies them. It does not bypass account or purchase requirements. COM5 and COM10 belong to Jungle Leopard Display, so they are excluded. Compatibility with every JONSBO firmware, native widget and package variant is not claimed.
 
 See `REVERSE-ENGINEERING.md` for compatibility findings and validation, and `THIRD-PARTY-NOTICES.md` for dependencies.

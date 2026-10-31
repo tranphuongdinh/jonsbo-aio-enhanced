@@ -1,6 +1,7 @@
 /work/
 /Data/
-/Assets/ThemeThumbs/
+/Assets/ThemeThumbs/*
+!/Assets/ThemeThumbs/*.png
 /Tools/
 *.exe
 *.exe.config
