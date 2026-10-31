@@ -8,15 +8,20 @@ if ($InstallDriver) {
 }
 try {
     Add-Type -AssemblyName System.Windows.Forms
+    # Check executable files, not empty/stale installation directories.
     $runtime = @(
-        "${env:ProgramFiles(x86)}\Microsoft\EdgeWebView\Application",
-        "$env:ProgramFiles\Microsoft\EdgeWebView\Application",
-        "$env:LOCALAPPDATA\Microsoft\EdgeWebView\Application"
+        "${env:ProgramFiles(x86)}\Microsoft\EdgeWebView\Application\*\msedgewebview2.exe",
+        "$env:ProgramFiles\Microsoft\EdgeWebView\Application\*\msedgewebview2.exe",
+        "$env:LOCALAPPDATA\Microsoft\EdgeWebView\Application\*\msedgewebview2.exe"
     ) | Where-Object { Test-Path $_ }
     if ($InstallWebView -or -not $runtime) {
         Write-Host 'Installing Microsoft WebView2 Runtime...'
-        $installer = Join-Path $env:TEMP 'JonsboStudio-WebView2Setup.exe'
-        Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $installer -UseBasicParsing
+        $installer = Join-Path $root 'Native\WebView2\MicrosoftEdgeWebView2RuntimeInstallerX64.exe'
+        if (-not (Test-Path -LiteralPath $installer)) {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            $installer = Join-Path $env:TEMP ('JonsboStudio-WebView2Setup-' + [guid]::NewGuid().ToString('N') + '.exe')
+            Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $installer -UseBasicParsing
+        }
         $signature = Get-AuthenticodeSignature -LiteralPath $installer
         if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation') { throw 'WebView2 installer signature could not be verified.' }
         $process = Start-Process -FilePath $installer -ArgumentList '/silent','/install' -WindowStyle Hidden -Wait -PassThru

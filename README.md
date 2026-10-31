@@ -2,19 +2,21 @@
 
 A dark desktop controller and theme editor for compatible JONSBO USB displays. The connected DS916 (462 × 1920) and DS339 (376 × 960) have both been tested; the owner confirmed upright playback on each.
 
-The app uses the official JONSBO AIO icon, wordmark and backdrop from the installed software, with controls styled to match its black, charcoal and gold interface. JONSBO Studio remains an independent compatibility application.
+The app uses the official JONSBO icon, wordmark and backdrop from the installed software, with controls styled to match its black, charcoal and gold interface. JONSBO Studio remains an independent compatibility application.
 
 ## Run
 
 “Start with Windows” registers an immediate user sign-in task with above-normal process priority and starts Studio in the tray. It replaces the older Run registry entry. Windows controls the exact order of startup applications, so being first is not guaranteed.
 
-Extract the complete standalone ZIP, then double-click `JonsboStudio.exe`. First launch automatically checks Microsoft WebView2 and the connected DS339 USB driver, showing a setup progress window only when installation is needed. WebView2 setup needs internet access; DS339 driver installation requests Windows administrator approval. If a newly connected DS339 needs its driver, reopen Studio. Current Windows 10/11 x64 with .NET Framework 4.8 is required.
+Extract the complete standalone ZIP, then double-click `JonsboStudio.exe`. First launch automatically checks Microsoft WebView2 and the connected DS339 USB driver, showing a setup progress window only when installation is needed. The signed Microsoft WebView2 offline installer is bundled in `Native/WebView2`; DS339 driver installation requests Windows administrator approval. If a newly connected DS339 needs its driver, reopen Studio. Current Windows 10/11 x64 with .NET Framework 4.8 is required.
+
+Studio also checks actual browser creation: a stale runtime registration triggers one setup/retry. Startup errors show a recovery screen and save details to `%LOCALAPPDATA%/JonsboStudio/Logs/startup.log` instead of leaving an unexplained blank window. Keep the full ZIP contents together; the EXE alone is not the complete portable package.
 
 On first launch, each connected display receives compatible default output settings. Choose a theme for each display from Online themes or import a complete local package; personal profiles and media are not included in the release. The app shows guidance when a theme is missing and reports playback errors visibly.
 
-JONSBO AIO does not need to be installed. Video preparation uses `Native/FFmpeg`; DS339 playback uses `Native/DS339` and the separately installed USB driver in `Drivers/DS339`. Launch `JonsboStudio.exe` directly. Keep all bundled folders together. Existing JONSBO themes are discovered only when that optional installation is present; otherwise import themes or download them from Online themes.
+The vendor application does not need to be installed. Video preparation uses `Native/FFmpeg`; DS339 playback uses `Native/DS339` and the separately installed USB driver in `Drivers/DS339`. Launch `JonsboStudio.exe` directly. Keep all bundled folders together. Existing JONSBO themes are discovered only when that optional installation is present; otherwise import themes or download them from Online themes.
 
-Exit the official JONSBO-AIO application before connecting, because the serial port requires exclusive access. Select a theme and choose Apply. Auto rotation includes the correction verified on the connected VMAXB panel. Manual rotation is also available.
+Exit the official JONSBO application before connecting, because the serial port requires exclusive access. Select a theme and choose Apply. Auto rotation includes the correction verified on the connected VMAXB panel. Manual rotation is also available.
 
 Closing the window keeps playback running in the tray. Exit from the tray stops both displays. Each device keeps its own theme, resolution, frame rate, quality, rotation and resume state in `Data/Settings/devices.json`; running displays resume together on the next launch. Start with Windows is available in Settings. Device-side playback after all host processes exit has not been established for these JONSBO devices.
 
@@ -42,7 +44,11 @@ Video is prepared once at source frame rate into a persistent JPEG cache. FFmpeg
 .\build.ps1
 .\JonsboStudio.Diagnostics.exe --self-test
 .\JonsboStudio.Diagnostics.exe --ui-test
+.\Package-Release.ps1 -OutputZip work\new-release.zip
+.\Test-PortableRelease.ps1 -Zip work\new-release.zip
 ```
+
+The portable test extracts into a new path containing spaces with no Data/settings or private themes, disables vendor-folder discovery, restricts PATH to Windows, and launches from an unrelated working directory. It checks actual missing-browser failure/recovery (using an invalid browser path followed by the installed runtime), editor/UI startup, native theme roundtrip and generated 60 FPS video through the bundled FFmpeg. It does not uninstall this PC's runtime, simulate a new USB driver installation, or replace a clean-Windows VM test.
 
 Close the running app before replacing its executable. Alternatively build with `-OutputName JonsboStudio.Update.exe`, gracefully stop the running instance with `JonsboStudio.exe --exit`, and replace the executable and matching config after it exits.
 

@@ -14,3 +14,11 @@ New-Item -ItemType Directory -Path $destination -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $bundle.FullName 'bin\ffmpeg.exe') -Destination $destination -Force
 Get-ChildItem (Join-Path $bundle.FullName 'bin') -Filter '*.dll' | Copy-Item -Destination $destination -Force
 Write-Host 'Standalone video runtime is ready.'
+$webViewFolder = Join-Path $PSScriptRoot 'Native\WebView2'
+New-Item -ItemType Directory -Path $webViewFolder -Force | Out-Null
+$installer = Join-Path $webViewFolder 'MicrosoftEdgeWebView2RuntimeInstallerX64.exe'
+Invoke-WebRequest -Uri $manifest.webview2.url -OutFile $installer -UseBasicParsing
+if ((Get-FileHash $installer -Algorithm SHA256).Hash -ne $manifest.webview2.sha256) { throw 'WebView2 installer changed. Review the signed upstream release before updating the pinned hash.' }
+$signature = Get-AuthenticodeSignature -LiteralPath $installer
+if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation') { throw 'Invalid WebView2 installer signature.' }
+Write-Host 'Standalone WebView2 installer is ready.'
