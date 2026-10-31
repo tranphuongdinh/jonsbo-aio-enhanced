@@ -5,9 +5,8 @@ namespace JonsboStudio {
   public string Name{get{return (string)Json["Name"]??"Untitled";}}
   public int Width{get{return Math.Max(16,Math.Min(3840,(int?)Json["Width"]??1920));}}
   public int Height{get{return Math.Max(16,Math.Min(2400,(int?)Json["Height"]??462));}}
-  public string BackgroundFit{get{string fit=(string)Json["BackgroundFit"];return fit=="contain"||fit=="fill"||fit=="region"?fit:"cover";}}
+  public string BackgroundFit{get{string fit=(string)Json["BackgroundFit"];return fit=="contain"||fit=="cover"||fit=="fill"||fit=="region"?fit:((int?)Json["Type"]==1?"fill":"cover");}}
   public int BackgroundRotation{get{return Math.Max(0,Math.Min(360,(int?)Json["BackgroundRotation"]??0));}}
-  public void UseCover(){Json["BackgroundFit"]="cover";}
   public RectangleF BackgroundRegion{get{var region=Json["BackgroundRegion"] as JObject;float x=Math.Max(0,Math.Min(.99f,region==null?0:(float?)region["x"]??0)),y=Math.Max(0,Math.Min(.99f,region==null?0:(float?)region["y"]??0));float width=Math.Max(.01f,Math.Min(1-x,region==null?1:(float?)region["width"]??1)),height=Math.Max(.01f,Math.Min(1-y,region==null?1:(float?)region["height"]??1));return new RectangleF(x,y,width,height);}}
   public JArray Texts{get{return Json["DisplayTexts"] as JArray??new JArray();}}
   public JArray Images{get{return Json["DisplayImages"] as JArray??new JArray();}}
