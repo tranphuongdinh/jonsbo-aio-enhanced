@@ -15,7 +15,7 @@ Runtime dependencies and their notices:
 - LibreHardwareMonitorLib 0.9.6: MPL 2.0; `Licenses/LibreHardwareMonitor-MPL-2.0.txt`. Source: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor.
 - Microsoft System.Memory, System.Numerics.Vectors and System.Runtime.CompilerServices.Unsafe runtime libraries: MIT; source packages are available on NuGet. These support the hardware sensor library.
 
-Microsoft Edge WebView2 Runtime and .NET Framework are Microsoft components. Setup downloads the WebView2 installer from Microsoft and verifies its signature.
+Microsoft Edge WebView2 Runtime and .NET Framework are Microsoft components. The executable first-run setup downloads the WebView2 installer from Microsoft and verifies its signature.
 
 FFmpeg is bundled as a separate LGPL v3 shared executable with replaceable DLLs. See `Licenses/FFmpeg-LICENSE.txt`, `Licenses/GPL-3.0.txt` for the incorporated GPL v3 text, and `Native/dependencies.json` for binary provenance, matching upstream source revision and build scripts. No FFmpeg source modifications were made. FFmpeg source: https://github.com/FFmpeg/FFmpeg/tree/8dca1586f4. Build scripts and dependency sources: https://github.com/BtbN/FFmpeg-Builds.
 

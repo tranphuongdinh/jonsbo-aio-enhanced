@@ -1,6 +1,6 @@
-param([switch]$InstallDriver)
+param([switch]$InstallDriver, [switch]$InstallWebView)
 $ErrorActionPreference = 'Stop'
-$root = $PSScriptRoot
+$root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 if ($InstallDriver) {
     & "$env:WINDIR\System32\pnputil.exe" /add-driver (Join-Path $root 'Drivers\DS339\MSUSBDisplay.inf') /install
     if ($LASTEXITCODE -notin 0, 3010) { throw "USB driver installation returned $LASTEXITCODE" }
@@ -13,7 +13,7 @@ try {
         "$env:ProgramFiles\Microsoft\EdgeWebView\Application",
         "$env:LOCALAPPDATA\Microsoft\EdgeWebView\Application"
     ) | Where-Object { Test-Path $_ }
-    if (-not $runtime) {
+    if ($InstallWebView -or -not $runtime) {
         Write-Host 'Installing Microsoft WebView2 Runtime...'
         $installer = Join-Path $env:TEMP 'JonsboStudio-WebView2Setup.exe'
         Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $installer -UseBasicParsing
@@ -28,7 +28,7 @@ try {
         $process = Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" -InstallDriver" -Wait -PassThru
         if ($process.ExitCode -ne 0) { throw 'DS339 driver setup did not complete.' }
     }
-    Start-Process -FilePath (Join-Path $root 'JonsboStudio.exe') -WorkingDirectory $root
+
 } catch {
     Write-Error $_
     exit 1
