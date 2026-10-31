@@ -2,6 +2,8 @@
 
 A dark desktop controller and theme editor for compatible JONSBO USB displays. The connected DS916 (462 × 1920) and DS339 (376 × 960) have both been tested; the owner confirmed upright playback on each.
 
+The app uses the official JONSBO AIO icon, wordmark and backdrop from the installed software, with controls styled to match its black, charcoal and gold interface. JONSBO Studio remains an independent compatibility application.
+
 ## Run
 
 Open `JonsboStudio.exe` from this folder. Keep its DLLs and Assets folder together; the `Runtime` folder is used when rebuilding from source. Windows x64, .NET Framework 4.8 and Microsoft Edge WebView2 Runtime are required. Video preparation currently uses FFmpeg from the installed JONSBO-AIO installation (or a locally supplied executable). DS339 playback uses the MacroSilicon display driver and SDK DLL from that installed application. This is not yet a standalone installer.

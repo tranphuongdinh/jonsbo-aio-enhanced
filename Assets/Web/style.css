@@ -6,3 +6,83 @@
 .brand-icon{width:38px;height:38px;object-fit:contain;flex:none}
 .online-groups{display:grid;gap:34px}.online-group-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:0 0 14px}.online-group-head h2{font-size:17px;margin:0}.online-group-head span{color:#839bb5;font-size:10px}.online-group .theme-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}.online-theme{cursor:pointer}.online-theme .theme-art{height:175px;overflow:hidden}.online-theme .theme-art>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.online-theme .theme-art>.resolution-label{position:relative}.online-theme .theme-tag{z-index:1}.online-theme .theme-body{min-height:100px}.online-theme .theme-actions .button{width:100%}.online-theme:focus-visible{outline:2px solid #94bdff;outline-offset:3px}.online-preview{position:fixed;inset:0;z-index:180;background:#030812e8;display:grid;place-items:center;padding:20px}.online-preview-dialog{width:min(1160px,100%);max-height:calc(100vh - 40px);overflow:auto;background:#172331;border:1px solid #46617f;border-radius:15px;box-shadow:0 24px 70px #000b;padding:22px;display:flex;flex-direction:column;gap:16px}.online-preview-head,.online-preview-actions{display:flex;align-items:center;justify-content:space-between;gap:16px}.online-preview-head h2{font-size:22px;margin:6px 0}.online-preview-head p{font-size:11px;color:#a4b8cf;margin:0}.online-preview-head .icon-button{font-size:26px;flex:none}.online-preview-art{min-height:220px;height:min(65vh,650px);border:1px solid #354b62;background:#050a11;border-radius:9px;display:grid;place-items:center;overflow:hidden}.online-preview-art img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}.online-preview-art img.hidden{display:none}.online-preview-art #online-preview-fallback{color:#8da4bc;font-size:12px}.online-preview-actions>span{flex:1;color:#8da4bc;font-size:11px;line-height:1.5}.online-preview-actions .button{flex:none}@media(max-width:700px){.online-preview{padding:10px}.online-preview-dialog{padding:14px;max-height:calc(100vh - 20px)}.online-preview-art{height:min(55vh,500px)}.online-preview-actions{flex-wrap:wrap}.online-preview-actions>span{flex-basis:100%}.library-toolbar{flex-wrap:wrap}}
 .toolbar-label #background-rotation{width:66px;height:34px;text-align:right}.editor-background{transform-origin:center center}
+
+/* JONSBO AIO visual system, using the vendor backdrop and wordmark. */
+:root {
+  color: #e8eaeb;
+  background: #07090c;
+  --accent: #d0ad67;
+  --muted: #a4adb4;
+  --border: #39434b;
+  --surface: #1b2730;
+  --control: #101820;
+}
+body { background: #07090c; }
+.app { background: #080b0f; }
+.sidebar {
+  width: 214px;
+  background: linear-gradient(180deg, #060709 0%, #08090c 70%, #240609 100%);
+  border-right: 1px solid #49302b;
+  padding-top: 18px;
+}
+.brand { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin: 0 10px 38px; min-height: 72px; }
+.brand-wordmark { display: block; width: 160px; height: 50px; object-fit: contain; }
+.brand small { margin: -1px 0 0 26px; color: #c7a967; font-size: 9px; letter-spacing: 3px; }
+.nav-caption, .side-footer { color: #8d7754; }
+.nav { color: #b7ac92; border-radius: 4px; }
+.nav:hover { background: #25231f; color: #f3e6c9; }
+.nav.active { background: linear-gradient(90deg, #3b3020, #202930); color: #efcb83; box-shadow: inset 3px 0 #d5b572; }
+.nav>span { color: #ceb16f; }
+.device-card { background: #151d23; border-color: #373d3d; border-radius: 5px; }
+.device-choice.active { background: #28271f; border-color: #c4a465; }
+.device-choice:hover { background: #252a2b; }
+.device-card small { color: #a79d86; }
+main {
+  background: linear-gradient(180deg, #111820eb 0%, #111820ef 68%, #190a0deb 100%), url('../Brand/JonsboBackdrop.jpg') center / cover;
+}
+.topbar { background: #10171dcf; border-bottom: 1px solid #654b34; }
+.topbar>div, .topbar b, .top-status { color: #c5b698; }
+.topbar>div span { color: #796548; }
+.top-status.playing i, .device-card i.found { background: #d1aa61; box-shadow: 0 0 0 3px #61451e; }
+.eyebrow, .panel-title, .nav-caption { color: #d0ad67; }
+.page-head p, .preview-foot, .activity p { color: #aab3b8; }
+.page-head h1, .card-head h2 { color: #f3f1ec; }
+.button { background: #25303a; border-color: #50575a; color: #e9e5d9; border-radius: 5px; }
+.button:hover { background: #34404a; border-color: #baa064; }
+.button.primary { background: #c5a76a; border-color: #ddc185; color: #171a1c; box-shadow: none; }
+.button.primary:hover { background: #e4c889; }
+.button.danger { background: #302023; border-color: #684147; color: #e7b9bd; }
+.text-button { color: #dfbd76; }
+input, select { background: #101820; color: #f1f1ea; border-color: #46515a; border-radius: 4px; }
+input:focus, select:focus { border-color: #d0ad67; }
+button:focus-visible, input:focus-visible, select:focus-visible, .online-theme:focus-visible { outline-color: #e1be76; }
+label, summary, .toolbar-label { color: #bdc6c8; }
+.preview-card, .control-card, .metrics, .activity, .editor-toolbar, .layers-panel, .inspector, .canvas-panel, .theme-card, .setting-row {
+  background: #1b2730ed;
+  border-color: #3c4850;
+  border-radius: 6px;
+  box-shadow: 0 12px 28px #0004;
+}
+.control-card, .play-actions { background: #19242dec; }
+.preview-stage, .online-preview-art { background: #050607; border-color: #505859; border-radius: 3px; }
+.selected-media { background: #121b22; border-color: #4c5150; border-radius: 4px; }
+.selected-media small, .selected-media>span { color: #af9e79; }
+.badge { color: #dfc387; border-color: #88704b; border-radius: 3px; }
+.badge.live { background: #44381f; color: #f0cf82; border-color: #ac8b50; }
+.metrics strong { color: #f4deb2; }
+.metrics span, .activity-top>span:last-child { color: #b9aa88; }
+.metrics>div { border-right-color: #4a5355; }
+.progress-track { background: #373f40; border-radius: 2px; }
+.progress-track>span { background: linear-gradient(90deg, #a78349, #ebc978); }
+.editor-toolbar, .panel-title { border-color: #485252; }
+.canvas-panel { background-color: #111921; background-image: radial-gradient(#4d4935 1px, transparent 1px); }
+.format-buttons .button.on { background: #59472a; border-color: #d3b16d; }
+.theme-card:hover { border-color: #c3a566; }
+.theme-art, .online-preview { background: #050607; }
+.theme-art>.theme-tag { background: #151b1ddd; border-color: #a98d56; color: #e8c980; }
+.setting-icon { background: #3b3428; color: #ddbd79; border-radius: 5px; }
+.setting-row p, .online-group-head span { color: #a8b1b5; }
+.toggle input:checked+span { background: #bb9b5e; }
+.online-preview-dialog, .region-dialog { background: #1b2730; border-color: #b49458; border-radius: 6px; }
+.sensor-live { background: #34301f; border-color: #75633f; color: #f0d393; }
+@media (max-width: 1200px) { .sidebar { width: 190px; } }
