@@ -6,6 +6,8 @@ The app uses the official JONSBO AIO icon, wordmark and backdrop from the instal
 
 ## Run
 
+“Start with Windows” registers an immediate user sign-in task with above-normal process priority and starts Studio in the tray. It replaces the older Run registry entry. Windows controls the exact order of startup applications, so being first is not guaranteed.
+
 Open `JonsboStudio.exe` from this folder. Keep its DLLs and Assets folder together; the `Runtime` folder is used when rebuilding from source. Windows x64, .NET Framework 4.8 and Microsoft Edge WebView2 Runtime are required. Video preparation currently uses FFmpeg from the installed JONSBO-AIO installation (or a locally supplied executable). DS339 playback uses the MacroSilicon display driver and SDK DLL from that installed application. This is not yet a standalone installer.
 
 For a release ZIP, extract all files to one folder before launching `JonsboStudio.exe`. The ZIP includes the runtime DLLs and UI assets but does not bundle FFmpeg, the JONSBO-AIO SDK, vendor theme media, or personal settings.
