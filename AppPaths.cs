@@ -1,7 +1,9 @@
 using System;using System.IO;using Newtonsoft.Json.Linq;
 namespace JonsboStudio {
  static class AppPaths {
-  public static readonly string Root=AppDomain.CurrentDomain.BaseDirectory;
+  // Use the same canonical form as ThemeDocument.Load and archive validation.
+  // Windows may launch from an 8.3 path (for example RUNNER~1 or STUDIO~1).
+  public static readonly string Root=Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
   public static readonly string Installed=Environment.GetEnvironmentVariable("JONSBO_STUDIO_VENDOR_PATH")??Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"JONSBO-AIO");
   public static string Data(string name){string path=Path.Combine(Root,"Data",name);Directory.CreateDirectory(path);return path;}
   public static string AssetUrl(string path){if(string.IsNullOrEmpty(path))return "";string full=Path.GetFullPath(path),root=Path.GetFullPath(Root),installed=Path.GetFullPath(Installed);if(full.StartsWith(root,StringComparison.OrdinalIgnoreCase))return "https://studio.local/"+Uri.EscapeUriString(full.Substring(root.Length).Replace('\\','/'));if(full.StartsWith(installed+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))return "https://installed.local/"+Uri.EscapeUriString(full.Substring(installed.Length+1).Replace('\\','/'));return "";}

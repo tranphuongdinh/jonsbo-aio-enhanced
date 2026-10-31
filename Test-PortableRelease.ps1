@@ -33,6 +33,14 @@ try {
             & $diagnostic $mode
             if ($LASTEXITCODE -ne 0) { throw "Portable test failed: $mode" }
         }
+        Add-Type -TypeDefinition 'using System.Text;using System.Runtime.InteropServices;public static class StudioReleasePaths{[DllImport("kernel32.dll",CharSet=CharSet.Unicode)]public static extern uint GetShortPathName(string path,StringBuilder buffer,uint size);}'
+        $buffer = New-Object Text.StringBuilder 4096
+        $length = [StudioReleasePaths]::GetShortPathName($testRoot,$buffer,4096)
+        if ($length -gt 0 -and $buffer.ToString() -ne $testRoot) {
+            & (Join-Path $buffer.ToString() 'JonsboStudio.Diagnostics.exe') --ui-test
+            if ($LASTEXITCODE -ne 0) { throw 'Theme saving/import failed when launched through a Windows short-path alias.' }
+            Write-Host 'PASS: theme saving/import from a Windows 8.3 path alias.'
+        }
         $ffmpeg = Join-Path $testRoot 'Native\FFmpeg\ffmpeg.exe'
         $media = Join-Path $testRoot 'Data\Temp\portable-test.mp4'
         & $ffmpeg -hide_banner -loglevel error -f lavfi -i 'testsrc2=size=640x240:rate=60' -t 2 -c:v mpeg4 -q:v 4 -pix_fmt yuv420p -y $media
