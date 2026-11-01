@@ -57,6 +57,10 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Online gallery screenshot failed.' }
         & $diagnostic --screenshot (Join-Path $testRoot 'clean-settings.png') settings
         if ($LASTEXITCODE -ne 0) { throw 'Sensor settings screenshot failed.' }
+        if ($ReportDirectory) {
+            New-Item -ItemType Directory -Path $ReportDirectory -Force | Out-Null
+            Copy-Item (Join-Path $testRoot 'clean-*.png') $ReportDirectory
+        }
         if ($TestSensorDriverSetup) {
             if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Sensor driver installation tests require the disposable CI VM.' }
             & $diagnostic --sensor-install-test
