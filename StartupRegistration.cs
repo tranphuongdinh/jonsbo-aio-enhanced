@@ -38,7 +38,7 @@ namespace JonsboStudio {
 
   public static void Set(bool enabled){dynamic folder=Connect().GetFolder("\\");if(!enabled){DeleteIfPresent(()=>{folder.DeleteTask(TaskName,0);});RemoveLegacy();return;}
    string sid=WindowsIdentity.GetCurrent().User.Value;string executable=Path.Combine(AppPaths.Root,"JonsboStudio.exe");if(!File.Exists(executable))executable=Application.ExecutablePath;
-   dynamic service=Connect();dynamic definition=service.NewTask(0);definition.RegistrationInfo.Description="Start JONSBO Studio immediately at sign-in, hidden in the tray.";definition.Principal.UserId=sid;definition.Principal.LogonType=3;definition.Principal.RunLevel=0;
+   dynamic service=Connect();dynamic definition=service.NewTask(0);definition.RegistrationInfo.Description="Start JONSBO Studio immediately at sign-in, hidden in the tray.";definition.Principal.UserId=sid;definition.Principal.LogonType=3;definition.Principal.RunLevel=SensorSetup.IsAdministrator?1:0;
    dynamic trigger=definition.Triggers.Create(9);trigger.UserId=sid;trigger.Enabled=true;
    dynamic action=definition.Actions.Create(0);action.Path=executable;action.Arguments="--background";action.WorkingDirectory=AppPaths.Root;
    definition.Settings.Enabled=true;definition.Settings.Priority=2;definition.Settings.MultipleInstances=2;definition.Settings.DisallowStartIfOnBatteries=false;definition.Settings.StopIfGoingOnBatteries=false;definition.Settings.RunOnlyIfIdle=false;definition.Settings.RunOnlyIfNetworkAvailable=false;definition.Settings.ExecutionTimeLimit="PT0S";

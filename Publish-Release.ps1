@@ -41,13 +41,17 @@ JONSBO Studio 1.0.0 for Windows 10/11 x64.
 
 Download **JonsboStudio-v1.0.0-win-x64.zip**, extract ALL files into a writable folder, then run **JonsboStudio.exe**. No CMD launcher or official vendor application is required. Requires .NET Framework 4.8; the signed Microsoft WebView2 offline installer and DS339 USB driver are bundled.
 
-This refresh fixes first-launch failure in StartupRegistration.IsEnabled (FileNotFoundException / 0x80070002) when a new computer has no Studio scheduled task. Startup status is optional and non-fatal, absent startup tasks report disabled, and disabling startup when no task exists succeeds. Earlier fresh-folder tests had inherited the development PC's existing startup task; this release now requires a test on a newly provisioned Windows VM.
+This refresh fixes missing native-theme statistics: MemoryUseInt, MemoryUsageSize, MemorySize, available RAM and upload/download speeds. RAM and network collection use Windows counters and do not require administrator access. Native unit dropdowns and conversions are supported, alongside broader Intel/AMD temperature, clock, voltage and package-power sensor mapping.
+
+For CPU temperature on another PC, choose **Settings -> Enable hardware sensors** and approve Windows administrator access. Studio installs the bundled, verified official signed PawnIO driver and restarts with hardware access; it remembers that preference and preserves elevated access in an existing startup task. The proprietary vendor app/CPUID SDK is not required. Unsupported or inaccessible hardware sensors remain a dash instead of displaying a sample or zero temperature. A Windows restart may be needed if driver setup reports one.
+
+The earlier first-launch missing-task fix (0x80070002) and Windows short-path normalization are retained. Startup status is optional and non-fatal.
 
 All 29 built-in theme previews are bundled. Community Sign in & apply opens the official store inside Studio; completed theme downloads import and apply automatically. Store account/points requirements remain in effect. DS916 and DS339 keep separate themes and settings; private media/profiles are not included.
 
 Clean Windows VM evidence: $($run.html_url)
 
-The exact ZIP was tested on a newly provisioned GitHub-hosted Windows Server VM with no Studio startup task, legacy Run entry, vendor installation or personal profiles. Tests cover the shipped EXE, first launch, missing-task handling, prerequisites, editor/theme roundtrip, all gallery previews, controlled store download/import and generated video playback. Hosted VM tests do not prove Windows 10/11 USB driver installation, physical screen playback or live signed-in community acquisition.
+The exact ZIP was tested on a newly provisioned GitHub-hosted Windows Server VM with no Studio startup task, legacy Run entry, vendor installation or personal profiles. Tests cover the shipped EXE, first launch, missing-task handling, prerequisites, editor/theme roundtrip, native sensor aliases/units, live RAM/network counters before hardware setup, signed PawnIO installation and device access, gallery previews, controlled store download/import and generated video playback. Intel CPU temperature/power/clock/voltage were also observed locally. The VM cannot validate physical CPU temperatures, Windows 10/11 USB driver installation, physical display playback or live signed-in community acquisition.
 
 ZIP SHA256: $hash
 

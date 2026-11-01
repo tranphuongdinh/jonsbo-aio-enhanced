@@ -25,7 +25,7 @@ namespace JonsboStudio {
   }
   internal static bool AllowedDownload(string url){Uri uri;return Uri.TryCreate(url,UriKind.Absolute,out uri)&&uri.Scheme=="https"&&(uri.Host=="theme.screen-aio.com"||uri.Host=="res.screen-aio.com"||uri.Host=="res.hlinel.com");}
   internal static bool ThemeFile(string path){string extension=Path.GetExtension(path).ToLowerInvariant();return extension==".zip"||extension==".vmax"||extension==".jonsbo";}
-  async Task Initialize(){try{
+  async Task Initialize(){try{state.Text="Preparing the official store browser…";
    await FirstRunSetup.InitializeWebViewAsync(browser);browser.CoreWebView2.Settings.AreDevToolsEnabled=false;
    browser.CoreWebView2.Settings.AreHostObjectsAllowed=false;browser.CoreWebView2.Settings.IsWebMessageEnabled=false;
    browser.CoreWebView2.NavigationStarting+=(s,e)=>{
@@ -63,7 +63,7 @@ namespace JonsboStudio {
     else if(operation.State==CoreWebView2DownloadState.Completed&&!complete){complete=true;state.Text="Importing and applying theme…";try{await imported(target);downloading=false;Close();}catch(Exception ex){downloading=false;complete=false;state.Text="Import failed: "+ex.Message;}}
    };
   }
-  public static void DownloadSmoke(IWin32Window owner,byte[] archive,Func<string,Task> imported){bool received=false;using(var dialog=new CommunityThemeStore("community-0","Download test",async path=>{await imported(path);received=true;},archive))using(var timeout=new Timer{Interval=15000}){timeout.Tick+=(s,e)=>{dialog.downloading=false;dialog.Close();};timeout.Start();dialog.ShowDialog(owner);timeout.Stop();if(!received)throw new Exception("Community store download did not reach the native import callback.");}}
+  public static void DownloadSmoke(IWin32Window owner,byte[] archive,Func<string,Task> imported){bool received=false;using(var dialog=new CommunityThemeStore("community-0","Download test",async path=>{await imported(path);received=true;},archive))using(var timeout=new Timer{Interval=15000}){timeout.Tick+=(s,e)=>{dialog.downloading=false;dialog.Close();};timeout.Start();dialog.ShowDialog(owner);timeout.Stop();if(!received)throw new Exception("Community store download did not reach the native import callback: "+dialog.state.Text);}}
   protected override void Dispose(bool disposing){if(disposing)browser.Dispose();base.Dispose(disposing);}
  }
 }

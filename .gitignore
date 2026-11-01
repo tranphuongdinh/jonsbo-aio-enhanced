@@ -16,3 +16,4 @@
 !/Drivers/DS339/amd64/*.dll
 !/Drivers/DS339/x86/*.dll
 /Native/WebView2/
+/Native/Sensors/

@@ -9,7 +9,7 @@ try {
     Copy-Item JonsboStudio.Update.exe.config (Join-Path $stage 'JonsboStudio.exe.config')
     Get-ChildItem Runtime -Filter '*.dll' | Copy-Item -Destination $stage
     foreach ($name in @('README.md','LICENSE','THIRD-PARTY-NOTICES.md','Licenses','Drivers')) { Copy-Item -LiteralPath $name -Destination $stage -Recurse }
-    foreach ($name in @('DS339','FFmpeg','WebView2')) {
+    foreach ($name in @('DS339','FFmpeg','WebView2','Sensors')) {
         $source = Join-Path 'Native' $name
         if (-not (Test-Path $source)) { throw "Missing dependency: $source. Run Prepare-Dependencies.ps1." }
         New-Item -ItemType Directory -Path (Join-Path $stage 'Native') -Force | Out-Null
@@ -20,6 +20,9 @@ try {
     $manifest = Get-Content Native\dependencies.json -Raw | ConvertFrom-Json
     $signature = Get-AuthenticodeSignature $installer
     if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation' -or (Get-FileHash $installer).Hash -ne $manifest.webview2.sha256) { throw 'Invalid offline WebView2 installer.' }
+    $sensorInstaller = Join-Path $stage 'Native\Sensors\PawnIO_setup.exe'
+    $sensorSignature = Get-AuthenticodeSignature $sensorInstaller
+    if ($sensorSignature.Status -ne 'Valid' -or $sensorSignature.SignerCertificate.Subject -notmatch 'CN=namazso.eu' -or (Get-FileHash $sensorInstaller).Hash -ne $manifest.pawnio.sha256) { throw 'Invalid signed sensor installer.' }
     New-Item -ItemType Directory -Path (Join-Path $stage 'Assets') -Force | Out-Null
     foreach ($name in @('Fonts','Icon','Web','Brand','Setup','ThemeThumbs')) { Copy-Item -LiteralPath (Join-Path 'Assets' $name) -Destination (Join-Path $stage 'Assets') -Recurse }
     Copy-Item Assets\public-themes.json (Join-Path $stage 'Assets')

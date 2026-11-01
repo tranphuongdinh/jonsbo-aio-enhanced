@@ -43,7 +43,7 @@ jobs:
           $report = Join-Path $env:RUNNER_TEMP 'fresh-install-results'
           New-Item -ItemType Directory -Path $report -Force | Out-Null
           Start-Transcript (Join-Path $report 'tests.log')
-          try { ./Test-PortableRelease.ps1 -Zip (Join-Path $env:RUNNER_TEMP 'candidate.zip') -RequireCleanMachine -ReportDirectory $report }
+          try { ./Test-PortableRelease.ps1 -Zip (Join-Path $env:RUNNER_TEMP 'candidate.zip') -RequireCleanMachine -ReportDirectory $report -TestSensorDriverSetup }
           finally { Stop-Transcript }
       - name: Collect startup diagnostics
         if: always()

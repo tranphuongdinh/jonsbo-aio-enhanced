@@ -1,6 +1,7 @@
-param([Parameter(Mandatory=$true)][string]$Zip,[switch]$RequireCleanMachine,[string]$ReportDirectory='')
+param([Parameter(Mandatory=$true)][string]$Zip,[switch]$RequireCleanMachine,[string]$ReportDirectory='',[switch]$TestSensorDriverSetup)
 $ErrorActionPreference = 'Stop'
 $zipPath = (Resolve-Path -LiteralPath $Zip).Path
+if ($ReportDirectory) { $ReportDirectory = [IO.Path]::GetFullPath($ReportDirectory) }
 $sourceCommit = if ($env:GITHUB_SHA) { $env:GITHUB_SHA } else { (& git -C $PSScriptRoot rev-parse HEAD).Trim() }
 if ($RequireCleanMachine) {
     if ($env:OS -ne 'Windows_NT') { throw 'A clean Windows machine is required.' }
@@ -30,7 +31,7 @@ try {
         $shipped = Start-Process -FilePath (Join-Path $testRoot 'JonsboStudio.exe') -ArgumentList '--startup-test' -WorkingDirectory $env:TEMP -WindowStyle Hidden -Wait -PassThru
         if ($shipped.ExitCode -ne 0) { throw "The shipped GUI executable failed first-launch testing: $($shipped.ExitCode)" }
         Write-Host 'PASS: shipped JonsboStudio.exe first launch and absent startup task.'
-        foreach ($mode in @('--startup-test','--ui-test','--self-test')) {
+        foreach ($mode in @('--startup-test','--ui-test','--self-test','--sensor-test')) {
             & $diagnostic $mode
             if ($LASTEXITCODE -ne 0) { throw "Portable test failed: $mode" }
         }
@@ -54,6 +55,15 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Portable screenshot failed.' }
         & $diagnostic --screenshot (Join-Path $testRoot 'clean-online.png') online
         if ($LASTEXITCODE -ne 0) { throw 'Online gallery screenshot failed.' }
+        & $diagnostic --screenshot (Join-Path $testRoot 'clean-settings.png') settings
+        if ($LASTEXITCODE -ne 0) { throw 'Sensor settings screenshot failed.' }
+        if ($TestSensorDriverSetup) {
+            if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Sensor driver installation tests require the disposable CI VM.' }
+            & $diagnostic --sensor-install-test
+            if ($LASTEXITCODE -ne 0) { throw 'Sensor driver setup failed on the clean VM.' }
+            & $diagnostic --sensor-test
+            if ($LASTEXITCODE -ne 0) { throw 'Sensor sampling failed after driver installation.' }
+        }
         if ($ReportDirectory) {
             New-Item -ItemType Directory -Path $ReportDirectory -Force | Out-Null
             Copy-Item (Join-Path $testRoot 'clean-*.png') $ReportDirectory

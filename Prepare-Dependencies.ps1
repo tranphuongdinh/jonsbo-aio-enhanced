@@ -22,3 +22,11 @@ if ((Get-FileHash $installer -Algorithm SHA256).Hash -ne $manifest.webview2.sha2
 $signature = Get-AuthenticodeSignature -LiteralPath $installer
 if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Microsoft Corporation') { throw 'Invalid WebView2 installer signature.' }
 Write-Host 'Standalone WebView2 installer is ready.'
+$sensorFolder = Join-Path $PSScriptRoot 'Native\Sensors'
+New-Item -ItemType Directory -Path $sensorFolder -Force | Out-Null
+$sensorInstaller = Join-Path $sensorFolder 'PawnIO_setup.exe'
+Invoke-WebRequest $manifest.pawnio.url -OutFile $sensorInstaller -UseBasicParsing
+if ((Get-FileHash $sensorInstaller).Hash -ne $manifest.pawnio.sha256) { throw 'PawnIO installer differs from the pinned manifest.' }
+$sensorSignature = Get-AuthenticodeSignature $sensorInstaller
+if ($sensorSignature.Status -ne 'Valid' -or $sensorSignature.SignerCertificate.Subject -notmatch 'CN=namazso.eu') { throw 'Invalid PawnIO installer signature.' }
+Write-Host 'Signed hardware sensor installer is ready.'
