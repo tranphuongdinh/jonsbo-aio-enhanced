@@ -61,13 +61,15 @@ try {
             if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Sensor driver installation tests require the disposable CI VM.' }
             & $diagnostic --sensor-install-test
             if ($LASTEXITCODE -ne 0) { throw 'Sensor driver setup failed on the clean VM.' }
+            & $diagnostic --sensor-install-test
+            if ($LASTEXITCODE -ne 0) { throw 'Sensor setup failed when the current driver was already installed.' }
             & $diagnostic --sensor-test
             if ($LASTEXITCODE -ne 0) { throw 'Sensor sampling failed after driver installation.' }
         }
         if ($ReportDirectory) {
             New-Item -ItemType Directory -Path $ReportDirectory -Force | Out-Null
             Copy-Item (Join-Path $testRoot 'clean-*.png') $ReportDirectory
-            @{passed=$true;cleanMachineRequired=[bool]$RequireCleanMachine;sha256=(Get-FileHash $zipPath).Hash;os=(Get-CimInstance Win32_OperatingSystem).Caption;machine=$env:COMPUTERNAME;testRoot=$testRoot;sourceCommit=$sourceCommit} | ConvertTo-Json | Set-Content (Join-Path $ReportDirectory 'result.json')
+            @{passed=$true;cleanMachineRequired=[bool]$RequireCleanMachine;sensorDriverSetupTested=[bool]$TestSensorDriverSetup;sha256=(Get-FileHash $zipPath).Hash;os=(Get-CimInstance Win32_OperatingSystem).Caption;machine=$env:COMPUTERNAME;testRoot=$testRoot;sourceCommit=$sourceCommit} | ConvertTo-Json | Set-Content (Join-Path $ReportDirectory 'result.json')
         }
         Write-Host "PASS: extracted package, no Data/config, unavailable vendor folder, restricted PATH, unrelated working directory, absent Windows startup task, missing-runtime recovery and bundled 60 FPS video. Test folder: $testRoot"
     } finally { Pop-Location }
