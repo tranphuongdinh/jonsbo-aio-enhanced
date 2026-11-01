@@ -3,14 +3,18 @@ namespace JonsboStudio {
  static class Program {
   [DllImport("kernel32.dll",CharSet=CharSet.Unicode)]static extern bool SetDllDirectory(string path);
   [STAThread]static int Main(string[] args){try{SetDllDirectory(AppPaths.Root);Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);
+   CpuScheduling.Initialize();if(Array.IndexOf(args,"--efficiency-cores")>=0)CpuScheduling.Set(true,false);
    bool setupSensors=false;
    if(args.Length>=2&&args[0]=="--wait-for-exit"){int oldPid;if(!int.TryParse(args[1],out oldPid))throw new ArgumentException("Invalid restart process.");try{using(var previous=Process.GetProcessById(oldPid))if(!previous.WaitForExit(90000))throw new Exception("Studio is still finishing playback. Try restarting again.");}catch(ArgumentException){}setupSensors=Array.IndexOf(args,"--setup-sensors")>=0;bool background=Array.IndexOf(args,"--background")>=0;args=background?new[]{"--background"}:new string[0];}
    if(setupSensors){SensorSetup.Install();SensorSetup.RememberAdministrator();if(StartupRegistration.IsEnabled())StartupRegistration.Set(true);}
    if((args.Length==0||args[0]=="--background")&&SensorSetup.PreferAdministrator&&!SensorSetup.IsAdministrator){SensorSetup.StartReplacement(false,args.Length>0);return 0;}
    if(args.Length>0){
+    if(args[0]=="--performance-test"){PerformanceTests.Run(args[1],args[2],Array.IndexOf(args,"--hardware")>=0);return 0;}
+    if(args[0]=="--preview-performance"){PerformanceTests.PreviewTiming();return 0;}
+    if(args[0]=="--cpu-test"){CpuScheduling.SelfTest();return 0;}
     if(args[0]=="--sensor-test"){SensorTests.Run();return 0;}
     if(args[0]=="--sensor-install-test"){if(Environment.GetEnvironmentVariable("GITHUB_ACTIONS")!="true")throw new Exception("Driver-install testing is restricted to the disposable Windows CI VM.");SensorSetup.Install();if(!SensorSetup.DriverAccessible)throw new Exception("PawnIO is not accessible after installation. A Windows restart may be required.");Console.WriteLine("PASS: signed PawnIO installation and hardware device access on a clean Windows VM.");return 0;}
-    if(args[0]=="--self-test"){StartupRegistration.SelfTest();SelfTest();return 0;}
+    if(args[0]=="--self-test"){StartupRegistration.SelfTest();CpuScheduling.SelfTest();PerformanceTests.SelfTest();SelfTest();return 0;}
     if(args[0]=="--sensors"){using(var sampler=new SensorSampler()){Thread.Sleep(1200);Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(sampler.Latest.values));Thread.Sleep(1200);Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(sampler.Latest.values));}return 0;}
     if(args[0]=="--gpu-sensors"){var computer=new Computer{IsGpuEnabled=true};computer.Open();try{foreach(var hardware in computer.Hardware)if(hardware.HardwareType.ToString().StartsWith("Gpu",StringComparison.OrdinalIgnoreCase)){hardware.Update();Console.WriteLine(hardware.Name);foreach(var sensor in hardware.Sensors)if(sensor.Value.HasValue)Console.WriteLine(sensor.SensorType+" / "+sensor.Name+" = "+sensor.Value.Value);}}finally{computer.Close();}return 0;}
     if(args[0]=="--render-frame"){var theme=ThemeDocument.Load(args[1]);var config=new StudioSettings{Width=theme.Width,Height=theme.Height,Fps=60,Quality=75,CacheMB=64};using(var engine=new PlaybackEngine(theme,config,false)){engine.Start();var timer=Stopwatch.StartNew();while(engine.Latest==null&&engine.Error.Length==0&&timer.ElapsedMilliseconds<30000)Thread.Sleep(20);if(engine.Latest==null)throw new Exception(engine.Error.Length>0?engine.Error:"No rendered frame was produced.");Thread.Sleep(1200);File.WriteAllBytes(args[2],engine.Latest.jpeg);Console.WriteLine("Rendered "+theme.Name+": "+theme.Texts.Count+" text, "+theme.Images.Count+" image layers; "+theme.Width+"x"+theme.Height+"; "+engine.Error);}return 0;}

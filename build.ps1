@@ -5,10 +5,10 @@ Push-Location $PSScriptRoot
 try{
  $compiler=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
  $references=@('/r:System.Drawing.dll','/r:System.Windows.Forms.dll','/r:System.Core.dll','/r:System.Management.dll','/r:Microsoft.CSharp.dll',('/r:'+ (Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\netstandard.dll')),'/r:Runtime\Newtonsoft.Json.dll','/r:Runtime\ICSharpCode.SharpZipLib.dll','/r:Runtime\Microsoft.Web.WebView2.Core.dll','/r:Runtime\Microsoft.Web.WebView2.WinForms.dll','/r:Runtime\LibreHardwareMonitorLib.dll')
- $sources=@('AssemblyInfo.cs','Program.cs','AppPaths.cs','ThemeDocument.cs','ThemeRepository.cs','OnlineCatalog.cs','JonsboTransport.cs','MsDisplayTransport.cs','TurboCodec.cs','SensorBindings.cs','Sensors.cs','SensorSetup.cs','SensorTests.cs','ThemeRenderer.cs','PreparedStore.cs','JpegStreamReader.cs','PlaybackEngine.cs','PreviewEncoder.cs','StartupRegistration.cs','FirstRunSetup.cs','CommunityThemeStore.cs','AppForm.cs')
- & $compiler /nologo /platform:x64 /target:winexe /optimize+ '/win32icon:Assets\Icon\JonsboStudio.ico' "/out:$OutputName" $references $sources
+ $sources=@('AssemblyInfo.cs','CpuScheduling.cs','FramePacer.cs','PerformanceTests.cs','Program.cs','AppPaths.cs','ThemeDocument.cs','ThemeRepository.cs','OnlineCatalog.cs','JonsboTransport.cs','MsDisplayTransport.cs','TurboCodec.cs','SensorBindings.cs','Sensors.cs','SensorSetup.cs','SensorTests.cs','ThemeRenderer.cs','PreparedStore.cs','JpegStreamReader.cs','PlaybackEngine.cs','PreviewEncoder.cs','StartupRegistration.cs','FirstRunSetup.cs','CommunityThemeStore.cs','AppForm.cs')
+ & $compiler /nologo /unsafe+ /platform:x64 /target:winexe /optimize+ '/win32icon:Assets\Icon\JonsboStudio.ico' "/out:$OutputName" $references $sources
  if($LASTEXITCODE -ne 0){throw 'Build failed.'}
- & $compiler /nologo /platform:x64 /target:exe /optimize+ '/win32icon:Assets\Icon\JonsboStudio.ico' /out:JonsboStudio.Diagnostics.exe $references $sources
+ & $compiler /nologo /unsafe+ /platform:x64 /target:exe /optimize+ '/win32icon:Assets\Icon\JonsboStudio.ico' /out:JonsboStudio.Diagnostics.exe $references $sources
  if($LASTEXITCODE -ne 0){throw 'Diagnostic build failed.'}
  foreach($file in Get-ChildItem Runtime -Filter '*.dll'){$target=Join-Path $PSScriptRoot $file.Name;if(-not(Test-Path $target)){Copy-Item -LiteralPath $file.FullName -Destination $target}elseif((Get-FileHash $file.FullName).Hash -ne (Get-FileHash $target).Hash){throw "Close the app before replacing runtime $($file.Name)."}}
  @'

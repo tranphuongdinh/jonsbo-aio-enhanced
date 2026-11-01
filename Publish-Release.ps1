@@ -41,7 +41,11 @@ JONSBO Studio 1.0.0 for Windows 10/11 x64.
 
 Download **JonsboStudio-v1.0.0-win-x64.zip**, extract ALL files into a writable folder, then run **JonsboStudio.exe**. No CMD launcher or official vendor application is required. Requires .NET Framework 4.8; the signed Microsoft WebView2 offline installer and DS339 USB driver are bundled.
 
-This refresh fixes missing native-theme statistics: MemoryUseInt, MemoryUsageSize, MemorySize, available RAM and upload/download speeds. RAM and network collection use Windows counters and do not require administrator access. Native unit dropdowns and conversions are supported, alongside broader Intel/AMD temperature, clock, voltage and package-power sensor mapping.
+This refresh reduces playback CPU use with native BGRA delivery for DS339, fewer color conversions, cached sensor overlays and a lightweight 320 x 180 app preview. High-resolution pacing keeps output smooth when the window is hidden. With the user's saved DS916/DS339 themes, local warm-cache full-app samples measured about 0.72-0.98% CPU with the window open and 0.42-0.62% in the tray at approximately 60 fresh/USB frames per second. Results depend on theme, hardware and load; initial preparation and complex themes can exceed 2%.
+
+**Settings -> Use efficiency cores** is optional and off by default. Studio discovers Windows CPU efficiency classes instead of assuming fixed CPU numbers; this PC exposes eight E-cores. E-core mode can reduce foreground contention but does not guarantee lower CPU time.
+
+This refresh also fixes missing native-theme statistics: MemoryUseInt, MemoryUsageSize, MemorySize, available RAM and upload/download speeds. RAM and network collection use Windows counters and do not require administrator access. Native unit dropdowns and conversions are supported, alongside broader Intel/AMD temperature, clock, voltage and package-power sensor mapping.
 
 For CPU temperature on another PC, choose **Settings -> Enable hardware sensors** and approve Windows administrator access. Studio installs the bundled, verified official signed PawnIO driver and restarts with hardware access; it remembers that preference and preserves elevated access in an existing startup task. The proprietary vendor app/CPUID SDK is not required. Unsupported or inaccessible hardware sensors remain a dash instead of displaying a sample or zero temperature. A Windows restart may be needed if driver setup reports one.
 
