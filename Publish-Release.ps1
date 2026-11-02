@@ -41,7 +41,11 @@ JONSBO Studio 1.0.0 for Windows 10/11 x64.
 
 Download **JonsboStudio-v1.0.0-win-x64.zip**, extract ALL files into a writable folder, then run **JonsboStudio.exe**. No CMD launcher or official vendor application is required. Requires .NET Framework 4.8; the signed Microsoft WebView2 offline installer and DS339 USB driver are bundled.
 
-This refresh reduces playback CPU use with native BGRA delivery for DS339, fewer color conversions, cached sensor overlays and a lightweight 320 x 180 app preview. High-resolution pacing keeps output smooth when the window is hidden. With the user's saved DS916/DS339 themes, local warm-cache full-app samples measured about 0.72-0.98% CPU with the window open and 0.42-0.62% in the tray at approximately 60 fresh/USB frames per second. Results depend on theme, hardware and load; initial preparation and complex themes can exceed 2%.
+Settings now includes **Refresh devices**, **Reconnect DS916** and **Reconnect DS339** with per-display connection status. Transfer errors retry independently while retaining each theme/settings/cache. Device startup times out in the UI after 12 seconds and prevents duplicate attempts while Windows is still opening an interface. COM renumbering and DS339 SDK callback lifetime are handled.
+
+Repeated physical DS339 reconnect/refresh tests passed. On the development PC, DS916's Windows serial driver blocked during Open and Windows reported a restart requirement; DS916 playback after a USB reset and physical automatic hot-unplug recovery were not verified in this session. A stuck Windows driver can require a USB cable reset or Windows restart. Exit the official vendor app before connecting Studio.
+
+This refresh retains reduced playback CPU use with native BGRA delivery for DS339, fewer color conversions, cached sensor overlays and a lightweight 320 x 180 app preview. High-resolution pacing keeps output smooth when the window is hidden. With the user's saved DS916/DS339 themes, local warm-cache full-app samples measured about 0.72-0.98% CPU with the window open and 0.42-0.62% in the tray at approximately 60 fresh/USB frames per second. Results depend on theme, hardware and load; initial preparation and complex themes can exceed 2%.
 
 **Settings -> Use efficiency cores** is optional and off by default. Studio discovers Windows CPU efficiency classes instead of assuming fixed CPU numbers; this PC exposes eight E-cores. E-core mode can reduce foreground contention but does not guarantee lower CPU time.
 

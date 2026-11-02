@@ -76,3 +76,12 @@ The official vendor app uses CPUID SDK and requests administrator privileges in 
 Advanced vendor animation widgets are preserved in native packages but are not fully rendered or editable. CPU hardware readings use LibreHardwareMonitor when available; unsupported sensors display a dash. Community sign-in and points confirmation remain on the official store; Studio captures completed theme downloads and applies them. It does not bypass account or purchase requirements. COM5 and COM10 belong to Jungle Leopard Display, so they are excluded. Compatibility with every JONSBO firmware, native widget and package variant is not claimed.
 
 See `REVERSE-ENGINEERING.md` for compatibility findings and validation, and `THIRD-PARTY-NOTICES.md` for dependencies.
+
+
+## Device recovery
+
+Settings includes **Refresh devices**, **Reconnect DS916** and **Reconnect DS339**. Refresh enumerates current Windows USB interfaces without stopping playback. Each reconnect retains that display's theme, rotation, resolution and prepared frame cache; the other display runs independently. Interrupted USB transfers close and reopen their interface automatically, with retry delays capped at eight seconds. DS916 follows USB identity when Windows assigns a different COM number, and validates the device serial and size before resuming. DS339 callbacks remain rooted across SDK restarts and ignore detached sessions.
+
+Startup has a twelve-second UI timeout. A driver that blocks inside Windows keeps ownership of its pending operation until it returns, so repeated clicks cannot open duplicate handles. Studio reports blocked connections and keeps the other device available. A Windows driver that remains stuck can require unplugging the affected display's USB cable for ten seconds, or restarting Windows; these controls cannot force a hung kernel driver to recover. Exit the official vendor app before connecting Studio.
+
+Recovery validation covers simulated transfer failures, independent displays, port rebinding, cancellation, bounded backoff and a blocked-startup timeout. The connected DS339 passed repeated Settings reconnects and refresh. The development PC's DS916 serial driver blocked during Open, and Windows reported a restart requirement; healthy DS916 playback/reconnect could not be revalidated in this session without a USB reset or Windows restart. A requested DS339 Windows-interface restart also returned restart-required, so automatic physical hot-unplug recovery was not claimed from that test.
