@@ -85,3 +85,12 @@ Settings includes **Refresh devices**, **Reconnect DS916** and **Reconnect DS339
 Startup has a twelve-second UI timeout. A driver that blocks inside Windows keeps ownership of its pending operation until it returns, so repeated clicks cannot open duplicate handles. Studio reports blocked connections and keeps the other device available. A Windows driver that remains stuck can require unplugging the affected display's USB cable for ten seconds, or restarting Windows; these controls cannot force a hung kernel driver to recover. Exit the official vendor app before connecting Studio.
 
 Recovery validation covers simulated transfer failures, independent displays, port rebinding, cancellation, bounded backoff and a blocked-startup timeout. The connected DS339 passed repeated Settings reconnects and refresh. The development PC's DS916 serial driver blocked during Open, and Windows reported a restart requirement; healthy DS916 playback/reconnect could not be revalidated in this session without a USB reset or Windows restart. A requested DS339 Windows-interface restart also returned restart-required, so automatic physical hot-unplug recovery was not claimed from that test.
+
+
+## Video trim in the theme editor
+
+Choose a video background to reveal **Video trim**. Scrub to a frame, choose **Set start here** / **Set end here**, or enter start/end times in seconds. Leave End empty to use the video's end. **Play segment** previews the chosen loop; **Reset trim** restores the full clip. Changes support undo/redo and reach the display when applied.
+
+Trimming is non-destructive: the original video remains intact. Only the selected segment is prepared for playback, and changed bounds use a separate frame cache. Bounds are preserved when saving a theme or exporting/importing its .vmax package in Studio. They use Studio metadata; other theme applications may ignore those fields and play the full source. Trim controls are hidden for image backgrounds.
+
+Validation includes a generated red/green/blue H.264 video: selecting the middle second produces 60 green-only cached frames and loops without entering the other colors. Tests also cover changed-range cache separation, invalid bounds, native archive roundtrip, editor seek/mark/reset/undo/redo, preview looping and applying the selected range.

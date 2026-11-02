@@ -41,6 +41,8 @@ JONSBO Studio 1.0.0 for Windows 10/11 x64.
 
 Download **JonsboStudio-v1.0.0-win-x64.zip**, extract ALL files into a writable folder, then run **JonsboStudio.exe**. No CMD launcher or official vendor application is required. Requires .NET Framework 4.8; the signed Microsoft WebView2 offline installer and DS339 USB driver are bundled.
 
+Theme editor now supports non-destructive video trim: enter start/end seconds, scrub and mark boundaries, preview the selected loop, or reset to the full clip. Apply prepares only that segment. Trim settings survive save and .vmax export/import in Studio; other theme applications may ignore the Studio trim metadata. Generated-video tests verify that a one-second selection produces only its 60 frames.
+
 Settings now includes **Refresh devices**, **Reconnect DS916** and **Reconnect DS339** with per-display connection status. Transfer errors retry independently while retaining each theme/settings/cache. Device startup times out in the UI after 12 seconds and prevents duplicate attempts while Windows is still opening an interface. COM renumbering and DS339 SDK callback lifetime are handled.
 
 Repeated physical DS339 reconnect/refresh tests passed. On the development PC, DS916's Windows serial driver blocked during Open and Windows reported a restart requirement; DS916 playback after a USB reset and physical automatic hot-unplug recovery were not verified in this session. A stuck Windows driver can require a USB cable reset or Windows restart. Exit the official vendor app before connecting Studio.

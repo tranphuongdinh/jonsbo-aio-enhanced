@@ -1,0 +1,24 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using Microsoft.Web.WebView2.Core;
+namespace JonsboStudio {
+ sealed partial class AppForm {
+  public async Task TrimUiSmoke(string screenshot=null){for(int i=0;i<100&&!ready;i++)await Task.Delay(100);if(!ready)throw new Exception("Trim UI did not initialize.");string folder=Path.Combine(AppPaths.Data("Temp"),"trim-ui-"+Guid.NewGuid().ToString("N")),saved=null;Directory.CreateDirectory(folder);Exception failure=null;try{
+   string video=await Task.Run(()=>TrimTests.MakeVideo(folder));var json=ThemeDocument.Blank("Trim editor test",160,60);json["BackgroundVideoFile"]=video;string path=Path.Combine(folder,"theme.json");AppPaths.SaveJson(path,json);current=ThemeDocument.Load(path);Post(new{type="document",document=current.ForEditor()});await web.CoreWebView2.ExecuteScriptAsync("navigate('editor')");
+   bool loaded=false;for(int i=0;i<100;i++){if(await web.CoreWebView2.ExecuteScriptAsync("!!trimVideo()&&trimVideo().readyState>=1&&trimVideo().duration>0")=="true"){loaded=true;break;}await Task.Delay(100);}if(!loaded)throw new Exception("Trim preview metadata failed: "+await web.CoreWebView2.ExecuteScriptAsync("JSON.stringify({url:trimVideo()?.currentSrc,error:trimVideo()?.error?.message,ready:trimVideo()?.readyState})"));
+   if(await web.CoreWebView2.ExecuteScriptAsync("applyVideoTrim(1,2)&&!document.getElementById('video-trim').classList.contains('hidden')")!="true")throw new Exception("Trim controls did not apply a segment.");
+   await web.CoreWebView2.ExecuteScriptAsync("trimVideo().currentTime=1.98;videoTrimPaused=false;updateEditorVideo()");await Task.Delay(350);if(await web.CoreWebView2.ExecuteScriptAsync("trimVideo().currentTime>=1&&trimVideo().currentTime<1.85")!="true")throw new Exception("Editor preview escaped its selected loop.");
+   await web.CoreWebView2.ExecuteScriptAsync("document.getElementById('trim-seek').value=.5;document.getElementById('trim-seek').dispatchEvent(new Event('input'));document.getElementById('trim-mark-start').click()");await Task.Delay(100);
+   await web.CoreWebView2.ExecuteScriptAsync("document.getElementById('trim-seek').value=1.5;document.getElementById('trim-seek').dispatchEvent(new Event('input'));document.getElementById('trim-mark-end').click()");
+   if(await web.CoreWebView2.ExecuteScriptAsync("app.doc.VideoTrimStart===.5&&app.doc.VideoTrimEnd===1.5&&trimVideo().paused")!="true")throw new Exception("Scrub/mark controls did not retain the selected times.");
+   if(await web.CoreWebView2.ExecuteScriptAsync("(()=>{const count=app.undo.length;return !applyVideoTrim(2,1)&&app.doc.VideoTrimStart===.5&&app.undo.length===count})()")!="true")throw new Exception("Invalid range changed the document.");
+   await web.CoreWebView2.ExecuteScriptAsync("document.getElementById('trim-reset').click();history(false);history(true);history(false)");if(await web.CoreWebView2.ExecuteScriptAsync("app.doc.VideoTrimStart===.5&&app.doc.VideoTrimEnd===1.5")!="true")throw new Exception("Trim undo/redo failed.");
+   if(screenshot!=null)using(var stream=File.Create(screenshot))await web.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png,stream);
+   await web.CoreWebView2.ExecuteScriptAsync("send('saveTheme',{document:app.doc})");for(int i=0;i<100&&(busy||current.Path==path);i++)await Task.Delay(100);if(current.Path==path||current.Trim.Start!=.5||current.Trim.End!=1.5)throw new Exception("Trim editor save failed.");saved=current.Path;settings.Width=160;settings.Height=60;await Play(false);if(engine==null)throw new Exception(status);for(int i=0;i<150&&!engine.PreparedComplete&&engine.Error.Length==0;i++)await Task.Delay(100);if(!engine.PreparedComplete||Math.Abs(engine.Duration-1)>.001||engine.Prepared!=60||engine.Error.Length>0)throw new Exception("Applied trim did not prepare only the selected segment.");await Stop(false);
+   await web.CoreWebView2.ExecuteScriptAsync("app.doc.backgroundIsVideo=false;renderEditor()");if(await web.CoreWebView2.ExecuteScriptAsync("document.getElementById('video-trim').classList.contains('hidden')")!="true")throw new Exception("Trim controls remained visible for an image background.");
+   Console.WriteLine("PASS: video trim editor preview loop, scrub/mark, validation, reset, undo/redo, save and apply.");
+  }catch(Exception error){failure=error;}if(engine!=null)await Stop(false);if(saved!=null&&Path.GetFullPath(saved).StartsWith(Path.GetFullPath(AppPaths.Data("Themes"))+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))Directory.Delete(Path.GetDirectoryName(saved),true);await web.CoreWebView2.ExecuteScriptAsync("releaseTrimVideo(trimVideo());document.getElementById('stage-background')?.replaceChildren()");Directory.Delete(folder,true);if(failure!=null)throw failure;}
+ }
+}

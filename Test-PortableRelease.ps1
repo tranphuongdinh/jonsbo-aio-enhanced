@@ -31,7 +31,7 @@ try {
         $shipped = Start-Process -FilePath (Join-Path $testRoot 'JonsboStudio.exe') -ArgumentList '--startup-test' -WorkingDirectory $env:TEMP -WindowStyle Hidden -Wait -PassThru
         if ($shipped.ExitCode -ne 0) { throw "The shipped GUI executable failed first-launch testing: $($shipped.ExitCode)" }
         Write-Host 'PASS: shipped JonsboStudio.exe first launch and absent startup task.'
-        foreach ($mode in @('--startup-test','--ui-test','--self-test','--sensor-test')) {
+        foreach ($mode in @('--startup-test','--ui-test','--trim-ui-test','--self-test','--sensor-test')) {
             & $diagnostic $mode
             if ($LASTEXITCODE -ne 0) { throw "Portable test failed: $mode" }
         }
